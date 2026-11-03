@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오늘 · K1 Daily</title>
+<meta name="theme-color" content="#D6E4F0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="K1 Daily">
+<link rel="stylesheet" href="css/style.css?v=0.1.0">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="js/config.js?v=0.1.0"></script>
+<script src="js/i18n.js?v=0.1.0"></script>
+<script src="js/common.js?v=0.1.0"></script>
+<script src="js/push.js?v=0.1.0"></script>
+<script src="js/today.js?v=0.1.0"></script>
+</head>
+<body>
+<main class="app">
+  <div class="topbar"><div class="brand"><img src="assets/icon-192.png" alt=""><span data-i18n="today.title">오늘 체크</span></div></div>
+  <div class="day-nav card">
+    <button class="icon-btn" id="prev" aria-label="이전 날">◀</button>
+    <span class="date" id="date">-</span>
+    <button class="icon-btn" id="next" aria-label="다음 날">▶</button>
+  </div>
+  <div class="kpis">
+    <div class="kpi" id="k-rate-box"><div class="k-label" data-i18n="today.rate">오늘 준수율</div><div class="k-val"><span id="k-rate">-</span><span class="k-unit">%</span></div></div>
+    <div class="kpi"><div class="k-label" data-i18n="today.done">완료</div><div class="k-val"><span id="k-done">-</span><span class="k-unit">건</span></div><div class="k-sub" id="k-done-sub"></div></div>
+    <div class="kpi"><div class="k-label" data-i18n="today.left">남은 체크</div><div class="k-val"><span id="k-left">-</span><span class="k-unit">건</span></div></div>
+  </div>
+  <p class="help" data-i18n="today.denomHelp">준수율 = 완료 ÷ 시간이 지난 체크</p>
+  <div id="feedback"></div>
+  <p class="help hidden" id="readonly" data-i18n="today.readonly">지난 날짜는 보기만 가능합니다</p>
+  <div id="list"><div class="empty" data-i18n="common.loading">불러오는 중…</div></div>
+  <div id="banner"></div>
+</main>
+</body>
+</html>
