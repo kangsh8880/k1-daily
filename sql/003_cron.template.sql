@@ -11,7 +11,9 @@ select cron.unschedule(jobid) from cron.job where jobname in ('k1-daily-push', '
 select cron.schedule('k1-daily-push', '* * * * *', $job$
   select net.http_post(
     url := 'https://ixzbqggtkdludremcsln.supabase.co/functions/v1/k1-daily-push',
-    headers := jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', '__CRON_SECRET__'),
+    headers := jsonb_build_object('Content-Type', 'application/json',
+      'apikey', 'sb_publishable_DFZQO5i7OIWZYEExaO3B4A__-f_teEv',  -- 없으면 관문에서 401 UNAUTHORIZED_NO_AUTH_HEADER
+      'x-cron-secret', '__CRON_SECRET__'),
     body := '{"mode":"cron"}'::jsonb,
     timeout_milliseconds := 20000
   );

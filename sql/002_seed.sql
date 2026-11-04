@@ -47,29 +47,37 @@ begin
   end if;
 end $$;
 
--- 템플릿 (초기 항목 = 2026-11 건강관리 메일 체크리스트 기준)
-insert into public.hc_templates(code, name, description, period_days, sort, items) values
-('lifestyle_basic', '생활습관 기본 세트', '검진 후 생활습관 개선 항목 (물·식사·운동·금식·케겔 등)', null, 1, '[
-  {"title":"공복 체중 기록","category":"건강측정","times":["06:20"],"note":"화장실 다녀온 뒤 공복으로"},
-  {"title":"케겔 운동 1세트","category":"운동","times":["07:10","11:30","18:30"],"note":"5초 조이기·5초 풀기 × 10회, 숨 참지 않기"},
-  {"title":"물 마시기 점검","category":"식사·수분","times":["11:00","15:00","18:00"],"note":"11시 0.7L / 15시 1L / 18시 1.5L, 식사 사이에"},
-  {"title":"일어나서 2~3분 걷기","category":"운동","times":["10:00","14:00","16:00"],"days":[1,2,3,4,5],"note":"1~2시간마다 의자에서 일어나기"},
-  {"title":"국물 반 공기 이하","category":"식사·수분","times":["12:40","19:20"],"note":"건더기 위주, 쌀국수 국물·조림 양념 남기기"},
+-- 추천 세트 (일반용, 2026-11-04 정비). 개인 처방 세트는 비활성
+insert into public.hc_templates(code, name, description, period_days, sort, active, items) values
+('hp_eradication_14d', '헬리코박터 제균 14일 (비활성)', '개인 처방용 - 목록에 표시하지 않음', 14, 99, false, '[]'::jsonb)
+on conflict (code) do nothing;
+update public.hc_templates set active = false where code = 'hp_eradication_14d';
+
+insert into public.hc_templates(code, name, description, period_days, sort, active, items) values
+('lifestyle_basic', '생활습관 기본 세트', '누구나: 체중·물·걷기·식사·산책·금식·스트레칭 (시간은 불러온 뒤 내 생활에 맞게 수정)', null, 1, true, '[
+  {"title":"공복 체중 기록","category":"건강측정","times":["06:30"],"note":"기상 후 화장실 다녀온 뒤"},
+  {"title":"물 마시기 점검","category":"식사·수분","times":["10:00","14:00","17:00"],"note":"하루 1.5L 목표, 식사 사이에 나눠 마시기"},
+  {"title":"일어나서 2~3분 걷기","category":"운동","times":["10:30","14:30","16:30"],"days":[1,2,3,4,5],"note":"1~2시간마다 의자에서 일어나기"},
+  {"title":"싱겁게 먹기 (국물 반 공기 이하)","category":"식사·수분","times":["12:40","19:20"],"note":"건더기 위주, 국물·양념 남기기"},
   {"title":"저녁 식후 산책 30분","category":"운동","times":["20:00"],"note":"식후 30분 뒤 시작"},
-  {"title":"골프 연습","category":"운동","times":["20:40"],"note":"스트레칭 먼저, 산책에 추가로"},
-  {"title":"술·커피 0잔","category":"생활","times":["21:00"],"note":"치료 기간 금주·금커피"},
-  {"title":"저녁 8시 이후 금식","category":"식사·수분","times":["21:30"]},
-  {"title":"취침 2시간 전 물 줄이기","category":"생활","times":["21:30"],"note":"야간뇨 예방"}
+  {"title":"저녁 8시 이후 금식","category":"식사·수분","times":["21:00"]},
+  {"title":"취침 전 스트레칭 5분","category":"운동","times":["22:00"]}
 ]'::jsonb),
-('bp_daily', '혈압 관리', '혈압 측정 아침·저녁 + 혈압약 아침 1회', null, 2, '[
-  {"title":"혈압 측정","category":"건강측정","times":["06:45","22:00"],"note":"아침은 혈압약 복용 전. 수축기 100 미만·심한 어지럼 시 약사·의사 연락"},
-  {"title":"혈압약 복용 (세비카 5/40mg 1정)","category":"복약","times":["07:00"],"note":"아침 식후. 본인 약 이름으로 수정 가능"}
+('bp_daily', '혈압 관리', '혈압 측정 아침·저녁 + 혈압약 1회 (약 이름·시간은 본인 처방에 맞게 수정)', null, 2, true, '[
+  {"title":"혈압 측정","category":"건강측정","times":["07:00","21:30"],"note":"아침은 혈압약 복용 전, 앉아서 5분 쉰 뒤 측정"},
+  {"title":"혈압약 복용","category":"복약","times":["08:00"],"note":"본인 약 이름·복용 시간으로 수정"}
 ]'::jsonb),
-('hp_eradication_14d', '헬리코박터 제균 14일', '표준 3제 요법 + 무코스타 (시작일부터 14일 자동 종료)', 14, 3, '[
-  {"title":"오메프라졸 20mg 1캡슐","category":"복약","times":["06:30","18:00"],"note":"식전 30분"},
-  {"title":"아목시실린 500mg 2캡슐","category":"복약","times":["07:00","19:00"],"note":"식후, 12시간 간격"},
-  {"title":"클래리스로마이신 250mg 2정","category":"복약","times":["07:00","19:00"],"note":"식후, 12시간 간격"},
-  {"title":"무코스타 1정","category":"복약","times":["07:00","12:30","19:00"],"note":"식후"}
+('meds_basic', '복약 알림 기본', '하루 2회(아침·저녁 식후) 약 복용 알림 (약 이름·횟수는 본인 처방에 맞게 수정)', null, 3, true, '[
+  {"title":"아침 약 복용","category":"복약","times":["08:00"],"note":"약 이름으로 수정"},
+  {"title":"저녁 약 복용","category":"복약","times":["19:30"],"note":"약 이름으로 수정"}
+]'::jsonb),
+('men_health', '남성 건강 (전립선)', '케겔 운동 하루 3회 + 야간뇨 예방', null, 4, true, '[
+  {"title":"케겔 운동 1세트","category":"운동","times":["07:30","12:30","18:30"],"note":"5초 조이기·5초 풀기 × 10회, 숨 참지 않기"},
+  {"title":"취침 2시간 전 물 줄이기","category":"생활","times":["21:00"],"note":"야간뇨 예방"}
+]'::jsonb),
+('exercise_weekly', '운동 습관 (주 3회)', '월·수·금 근력운동 + 주말 유산소', null, 5, true, '[
+  {"title":"근력운동 20분 (스쿼트·팔굽혀펴기·플랭크)","category":"운동","times":["19:30"],"days":[1,3,5],"note":"하체 위주, 숨 참지 않기"},
+  {"title":"유산소 운동 40분 (걷기·자전거·수영)","category":"운동","times":["09:00"],"days":[6,7]}
 ]'::jsonb)
-on conflict (code) do update set name = excluded.name, description = excluded.description,
-  period_days = excluded.period_days, items = excluded.items, sort = excluded.sort;
+on conflict (code) do update set name = excluded.name, description = excluded.description, period_days = excluded.period_days,
+  sort = excluded.sort, active = excluded.active, items = excluded.items;
