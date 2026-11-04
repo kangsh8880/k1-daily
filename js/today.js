@@ -120,7 +120,7 @@
     const tomorrow = K1D.addDays(today, 1);
     K1D.modal(`<h2>${K1D.t("today.onboardTitle")}</h2><p class="sub">${K1D.t("today.onboardDesc")}</p>
       ${tpls.map(t => `<label class="card row pick">
-          <input type="checkbox" value="${K1D.esc(t.code)}" checked>
+          <input type="checkbox" value="${K1D.esc(t.code)}" ${t.code === "lifestyle_basic" ? "checked" : ""}>
           <div class="grow"><b>${K1D.esc(t.name)}</b> <span class="chip">${(t.items || []).length}개</span>
             <div class="help">${K1D.esc(t.description || "")}</div>
             ${t.period_days ? `<div class="row mt"><span class="help">${K1D.t("today.startDate")} (${t.period_days}일)</span>
