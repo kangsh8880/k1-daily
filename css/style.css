@@ -33,6 +33,11 @@
   --p-red-soft: #FBEEEE;
   --p-purple: #E6DFF3;
   --p-gray: #E9ECF1;
+  --p-sleep: #DDE3F4;
+  --p-mind: #F3E3EC;
+  --p-rel: #FBE6DA;
+  --p-learn: #DFF0EE;
+  --p-work: #ECE8DC;
 
   --btn-text: #173156;
   --shadow: 0 2px 10px rgba(30, 40, 60, 0.06);
@@ -63,6 +68,11 @@
   --p-red-soft: #3A2424;
   --p-purple: #3A3350;
   --p-gray: #2E343D;
+  --p-sleep: #2B3350;
+  --p-mind: #45303D;
+  --p-rel: #4A3528;
+  --p-learn: #24413E;
+  --p-work: #3E3A2C;
   --btn-text: #E8ECF1;
 }
 
@@ -153,11 +163,16 @@ textarea.input { min-height: 80px; resize: vertical; }
   border: 1px solid var(--border); background: var(--soft); font-size: var(--fs-xs); color: var(--text);
   white-space: nowrap;
 }
-.chip.c-복약 { background: var(--p-purple); }
-.chip.c-운동 { background: var(--p-green); }
-.chip.c-식사·수분 { background: var(--p-yellow); }
-.chip.c-건강측정 { background: var(--p-blue); }
-.chip.c-생활 { background: var(--p-gray); }
+.chip.cat-med { background: var(--p-purple); }
+.chip.cat-meas { background: var(--p-blue); }
+.chip.cat-ex { background: var(--p-green); }
+.chip.cat-food { background: var(--p-yellow); }
+.chip.cat-sleep { background: var(--p-sleep); }
+.chip.cat-life { background: var(--p-gray); }
+.chip.cat-mind { background: var(--p-mind); }
+.chip.cat-rel { background: var(--p-rel); }
+.chip.cat-learn { background: var(--p-learn); }
+.chip.cat-work { background: var(--p-work); }
 .chip.warn { background: var(--p-red-soft); color: var(--red); border-color: #E3B5B5; }
 .chip.info { background: var(--p-blue-soft); color: var(--blue); }
 
