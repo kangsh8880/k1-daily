@@ -316,3 +316,4 @@ table.tbl tr.worst td.num:last-child { color: var(--red); font-weight: 700; }
 .pick { cursor: pointer; align-items: flex-start; }
 .logo { width: 72px; height: 72px; border-radius: 18px; margin-top: 8px; }
 table.tbl td:not(:first-child), table.tbl th:not(:first-child) { white-space: nowrap; }
+.policy .card p { margin: 4px 0; }
