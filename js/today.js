@@ -79,7 +79,7 @@
       html += `<div class="task ${cls} ${editable ? "" : "readonly"}" data-id="${r.id}">
         <div class="chk">✓</div>
         <div class="body"><div class="title">${K1D.esc(r.title)}</div>
-          <div class="note"><span class="chip c-${K1D.esc(r.category)}">${K1D.esc(r.category)}</span> ${K1D.esc(r.note || "")}</div></div>
+          <div class="note"><span class="chip ${K1D.catClass(r.category)}">${K1D.esc(r.category)}</span> ${K1D.esc(r.note || "")}</div></div>
         <div class="state">${state}</div>
         ${editable ? `<button class="icon-btn more" data-more="${r.id}" aria-label="더보기">⋯</button>` : ""}
       </div>`;

@@ -102,6 +102,13 @@
     const names = ["", "월", "화", "수", "목", "금", "토", "일"];
     return (days || []).slice().sort().map(d => names[d]).join("·");
   };
+  // 분류 체계 (9개 + 기존 호환). 순서 = 화면 정렬 순서, key = CSS 클래스
+  K1D.CATEGORIES = [
+    ["복약", "med"], ["건강측정", "meas"], ["운동", "ex"], ["식사·수분", "food"],
+    ["수면", "sleep"], ["생활", "life"], ["마음 관리", "mind"], ["관계·가족", "rel"],
+    ["학습·자기계발", "learn"], ["업무", "work"]
+  ];
+  K1D.catClass = c => { const f = K1D.CATEGORIES.find(x => x[0] === c); return "cat-" + (f ? f[1] : "etc"); };
   K1D.rateClass = v => v == null ? "" : (v >= 80 ? "good" : v >= 60 ? "mid" : "bad");
   K1D.localTime = (iso, tz) => {
     try { return new Date(iso).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: tz }); }

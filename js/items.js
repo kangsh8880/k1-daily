@@ -3,7 +3,7 @@
   "use strict";
   const K1D = window.K1D;
   const $ = s => document.querySelector(s);
-  const CATS = ["복약", "건강측정", "운동", "식사·수분", "생활", "업무", "학습"];
+  const CATS = K1D.CATEGORIES.map(c => c[0]);
   const DAYN = ["", "월", "화", "수", "목", "금", "토", "일"];
   let items = [];
 

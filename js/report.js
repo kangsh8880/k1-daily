@@ -24,7 +24,7 @@
       }));
       const [cats, its] = await Promise.all([K1D.rpc("hc_category_stats", { p_days: 7 }), K1D.rpc("hc_item_stats", { p_days: 7 })]);
       renderTable($("#cat-table"), cats, "분류", r => K1D.esc(r.category));
-      renderTable($("#item-table"), its, "항목", r => `${K1D.esc(r.title)} <span class="chip c-${K1D.esc(r.category)}">${K1D.esc(r.category)}</span>`);
+      renderTable($("#item-table"), its, "항목", r => `${K1D.esc(r.title)} <span class="chip ${K1D.catClass(r.category)}">${K1D.esc(r.category)}</span>`);
     } catch (e) { K1D.toast(K1D.errMsg(e), "err"); }
     K1D.renderFeedback($("#feedback"));
     K1D.renderBanner($("#banner"));
