@@ -1,0 +1,28 @@
+# K1 Daily 알림 서비스 상태 점검 (15분마다)
+# 이상이면 이 작업이 '실패'로 끝나고, GitHub가 저장소 소유자에게 실패 메일을 보냅니다.
+name: K1 Daily 상태 점검
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: 알림 서비스 상태 확인
+        env:
+          URL: https://ixzbqggtkdludremcsln.supabase.co/rest/v1/rpc/hc_health
+          KEY: sb_publishable_DFZQO5i7OIWZYEExaO3B4A__-f_teEv
+        run: |
+          RES=$(curl -sS -m 30 -X POST "$URL" -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}' -w '\n%{http_code}') \
+            || { echo "::error::Supabase 접속 실패 (프로젝트 일시정지 또는 네트워크 문제)"; exit 1; }
+          CODE=$(echo "$RES" | tail -n1); BODY=$(echo "$RES" | sed '$d')
+          echo "HTTP $CODE"; echo "$BODY"
+          if [ "$CODE" != "200" ]; then echo "::error::상태 점검 응답 오류 HTTP $CODE (일시정지·권한 문제 가능)"; exit 1; fi
+          if [ "$(echo "$BODY" | jq -r '.ok')" != "true" ]; then
+            echo "::error::알림 서비스 이상 → $(echo "$BODY" | jq -c '{cron_active, minutes_since_ok, http_fail_15m, push_sent_1h, push_failed_1h}')"
+            exit 1
+          fi
+          echo "정상: 마지막 정상 호출 $(echo "$BODY" | jq -r '.minutes_since_ok')분 전"
