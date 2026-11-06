@@ -36,7 +36,42 @@
     if (!data.session) { location.replace("index.html"); return null; }
     K1D.session = data.session;
     try { K1D.me = await K1D.rpc("hc_me"); } catch (e) { K1D.toast(K1D.errMsg(e), "err"); throw e; }
+    if (!K1D.me.consent_at || K1D.me.consent_version !== K1D.CONSENT_VERSION) await K1D.askConsent();
     return K1D.me;
+  };
+
+  // ---- 개인정보 수집·이용 동의 (최초 1회, 방침 개정 시 다시) ----
+  K1D.CONSENT_VERSION = "2026-11-06";
+  K1D.askConsent = function () {
+    return new Promise(resolve => {
+      const back = document.createElement("div");
+      back.className = "modal-back";
+      back.innerHTML = `<div class="modal" role="dialog" aria-modal="true">
+        <h2>개인정보 수집·이용 동의</h2>
+        <p class="help">K1 Daily를 쓰려면 아래 두 가지에 동의가 필요합니다. 자세한 내용은 <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>을 확인하세요.</p>
+        <div class="card">
+          <label class="row pick"><input type="checkbox" id="cs-1"><div class="grow"><b>[필수] 개인정보 수집·이용</b>
+            <div class="help">이메일, 표시 이름, 시간대, 체크 항목과 체크 기록, 알림 기기 정보 · 목적: 체크리스트 알림과 준수율 피드백 · 보관: 탈퇴 시 즉시 삭제</div></div></label>
+        </div>
+        <div class="card">
+          <label class="row pick"><input type="checkbox" id="cs-2"><div class="grow"><b>[필수] 건강 관련 정보 처리</b>
+            <div class="help">직접 입력하는 항목에 복약·혈압·체중 같은 건강 관련 내용이 포함될 수 있습니다. 본인 확인 용도로만 쓰며, 관리자를 포함한 다른 사람은 볼 수 없고 광고에 쓰지 않습니다.</div></div></label>
+        </div>
+        <label class="row mt pick"><input type="checkbox" id="cs-all"> <b>모두 동의</b></label>
+        <div class="actions"><button class="btn" id="cs-no">동의하지 않음 (로그아웃)</button><button class="btn primary" id="cs-yes" disabled>동의하고 시작</button></div>
+      </div>`;
+      document.body.appendChild(back);
+      const c1 = back.querySelector("#cs-1"), c2 = back.querySelector("#cs-2"), all = back.querySelector("#cs-all"), yes = back.querySelector("#cs-yes");
+      const sync = () => { yes.disabled = !(c1.checked && c2.checked); all.checked = c1.checked && c2.checked; };
+      c1.addEventListener("change", sync); c2.addEventListener("change", sync);
+      all.addEventListener("change", () => { c1.checked = c2.checked = all.checked; sync(); });
+      back.querySelector("#cs-no").addEventListener("click", K1D.logout);
+      yes.addEventListener("click", async () => {
+        yes.disabled = true;
+        try { await K1D.rpc("hc_give_consent", { p_version: K1D.CONSENT_VERSION }); K1D.me.consent_at = new Date().toISOString(); K1D.me.consent_version = K1D.CONSENT_VERSION; back.remove(); resolve(); }
+        catch (e) { yes.disabled = false; K1D.toast(K1D.errMsg(e), "err"); }
+      });
+    });
   };
   K1D.logout = async function () {
     try { await K1D.sb().auth.signOut(); } catch (e) { /* 무시 */ }

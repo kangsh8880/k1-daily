@@ -1,6 +1,6 @@
 /* K1 Daily - 환경 설정 (페이지와 서비스워커 공용) */
 self.K1D_CONFIG = {
-  version: "0.1.2",
+  version: "0.2.0",
   supabaseUrl: "https://ixzbqggtkdludremcsln.supabase.co",
   // 공개(publishable) 키: 브라우저 공개용. 데이터 보호는 RLS + 함수 권한으로 처리
   supabaseKey: "sb_publishable_DFZQO5i7OIWZYEExaO3B4A__-f_teEv",
