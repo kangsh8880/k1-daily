@@ -81,3 +81,35 @@ insert into public.hc_templates(code, name, description, period_days, sort, acti
 ]'::jsonb)
 on conflict (code) do update set name = excluded.name, description = excluded.description, period_days = excluded.period_days,
   sort = excluded.sort, active = excluded.active, items = excluded.items;
+
+-- 분류 보완 세트 (2026-11-06)
+insert into public.hc_templates(code, name, description, period_days, sort, active, items) values
+('sleep_basic', '수면 습관', '같은 시각에 자고 일어나기, 잠들기 전 화면 끄기, 오후 카페인 줄이기', null, 6, true, '[
+  {"title":"기상 시각 지키기 (주말 포함)","category":"수면","times":["06:30"],"note":"주말도 평일과 1시간 이내 차이"},
+  {"title":"오후 2시 이후 카페인 끊기","category":"수면","times":["14:00"],"note":"커피·녹차·에너지음료"},
+  {"title":"휴대폰·TV 끄기 (취침 1시간 전)","category":"수면","times":["22:00"],"note":"침실에 휴대폰 두지 않기"},
+  {"title":"23시 이전 잠자리 들기","category":"수면","times":["22:50"],"note":"7시간 이상 수면 목표"}
+]'::jsonb),
+('mind_basic', '마음 관리', '스트레스를 줄이는 하루 3분 습관: 호흡, 기분 기록, 감사일기', null, 7, true, '[
+  {"title":"심호흡·명상 3분","category":"마음 관리","times":["12:50"],"note":"4초 들이쉬고 6초 내쉬기 × 10회"},
+  {"title":"오늘 기분 기록 (1~5점)","category":"마음 관리","times":["21:30"],"note":"점수와 이유 한 줄"},
+  {"title":"감사일기 1줄","category":"마음 관리","times":["22:10"],"note":"오늘 고마웠던 일 1가지"}
+]'::jsonb),
+('relation_family', '관계·가족', '가족·지인과의 연결 습관 (요일은 각자 맞게 수정)', null, 8, true, '[
+  {"title":"가족에게 안부 연락","category":"관계·가족","times":["20:30"],"days":[3,7],"note":"전화나 영상통화"},
+  {"title":"휴대폰 없이 가족과 식사","category":"관계·가족","times":["19:00"],"days":[6,7]},
+  {"title":"고마운 사람에게 메시지 1통","category":"관계·가족","times":["12:30"],"days":[5]}
+]'::jsonb),
+('learning_basic', '학습·자기계발', '외국어·독서·강의를 매일 조금씩', null, 9, true, '[
+  {"title":"외국어 단어 10개","category":"학습·자기계발","times":["07:30"],"days":[1,2,3,4,5],"note":"출근 전 또는 이동 중"},
+  {"title":"독서 20분","category":"학습·자기계발","times":["21:40"]},
+  {"title":"온라인 강의 1개","category":"학습·자기계발","times":["20:30"],"days":[2,4]}
+]'::jsonb),
+('work_execution', '업무 실행력', '하루 계획 → 핵심 업무 완료 → 마감 점검 → 주간 회고', null, 10, true, '[
+  {"title":"오늘 할 일 3개 정하기","category":"업무","times":["08:30"],"days":[1,2,3,4,5],"note":"가장 중요한 1개에 표시"},
+  {"title":"오전 중 핵심 업무 1건 완료","category":"업무","times":["11:50"],"days":[1,2,3,4,5]},
+  {"title":"업무 마감 점검·내일 준비","category":"업무","times":["17:20"],"days":[1,2,3,4,5],"note":"미완료 항목 내일로 옮기기"},
+  {"title":"주간 회고 (잘한 점·개선할 점)","category":"업무","times":["16:30"],"days":[5]}
+]'::jsonb)
+on conflict (code) do update set name = excluded.name, description = excluded.description, period_days = excluded.period_days,
+  sort = excluded.sort, active = excluded.active, items = excluded.items;
