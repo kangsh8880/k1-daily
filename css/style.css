@@ -317,3 +317,5 @@ table.tbl tr.worst td.num:last-child { color: var(--red); font-weight: 700; }
 .logo { width: 72px; height: 72px; border-radius: 18px; margin-top: 8px; }
 table.tbl td:not(:first-child), table.tbl th:not(:first-child) { white-space: nowrap; }
 .policy .card p { margin: 4px 0; }
+.push-off { background: var(--p-red-soft); border-color: #E3B5B5; }
+.push-warn { background: var(--p-yellow-soft); font-size: var(--fs-sm); }
