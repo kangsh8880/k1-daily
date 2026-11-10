@@ -46,6 +46,7 @@
     $("#install-ios").classList.toggle("hidden", !ios);
     $("#install-android").classList.toggle("hidden", ios);
     await K1D.registerSW();
+    await K1D.push.ensure();
     refreshPush();
   }
 

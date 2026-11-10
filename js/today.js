@@ -19,6 +19,8 @@
     await load();
     if (!me.item_count) onboard();
     K1D.renderBanner($("#banner"));
+    K1D.renderPushBanner($("#push-banner"));
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) K1D.renderPushBanner($("#push-banner")); });
   }
 
   function go(n) {

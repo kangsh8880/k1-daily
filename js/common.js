@@ -37,6 +37,7 @@
     K1D.session = data.session;
     try { K1D.me = await K1D.rpc("hc_me"); } catch (e) { K1D.toast(K1D.errMsg(e), "err"); throw e; }
     if (!K1D.me.consent_at || K1D.me.consent_version !== K1D.CONSENT_VERSION) await K1D.askConsent();
+    if (K1D.push) setTimeout(() => K1D.push.ensure(), 1500);   // 어느 화면을 열든 알림 구독 자동 복구
     return K1D.me;
   };
 
@@ -177,6 +178,35 @@
         `<div class="fb-rule">${K1D.esc(r.rule_name)}</div><div class="fb-msg">${K1D.esc(r.message)}</div>`).join("")}</div>`;
     } catch (e) { holder.innerHTML = ""; }
   };
+
+  // ---- 알림 상태 배너: 꺼져 있으면 바로 켜기 + 원인별 안내 (알림 기본 '켜짐' 유지) ----
+  K1D.renderPushBanner = async function (holder) {
+    if (!holder || !K1D.push) return;
+    const state = await K1D.push.ensure();
+    const standalone = K1D.push.isStandalone();
+    if (state === "on") {
+      holder.innerHTML = standalone ? "" :
+        `<div class="card push-warn"><b>알림이 켜져 있습니다.</b> 다만 브라우저로 쓰면 Chrome이 일정 기간 뒤 알림 권한을 자동으로 끌 수 있습니다.
+          <b>앱으로 설치</b>하면 자동으로 꺼지지 않습니다. <div class="row mt">${K1D.canInstall() ? '<button class="btn sm primary" id="pb-install">앱으로 설치</button>' : '<span class="help">Chrome ⋮ 메뉴 → "앱 설치" 또는 "홈 화면에 추가"</span>'}</div></div>`;
+    } else {
+      const why = {
+        off: "알림이 꺼져 있어 정해진 시간에 알려 드릴 수 없습니다.",
+        denied: "브라우저에서 알림이 차단되어 있습니다. 주소창 왼쪽 자물쇠(사이트 설정) → 알림 → <b>허용</b>으로 바꾼 뒤 아래 버튼을 누르세요.",
+        unsupported: K1D.push.isIOS() ? "아이폰은 Safari 공유 버튼 → '홈 화면에 추가' 후, 홈 화면 아이콘으로 열어야 알림을 받을 수 있습니다." : "이 브라우저는 알림을 지원하지 않습니다. Chrome으로 열어 주세요."
+      }[state] || "";
+      holder.innerHTML = `<div class="card push-off"><b class="emph-red">알림이 꺼져 있습니다</b><div class="help">${why}</div>
+        <div class="row wrap mt">${state !== "unsupported" ? '<button class="btn sm primary" id="pb-on">알림 켜기</button>' : ""}
+        ${!standalone && K1D.canInstall() ? '<button class="btn sm" id="pb-install">앱으로 설치</button>' : ""}</div></div>`;
+    }
+    const on = holder.querySelector("#pb-on");
+    if (on) on.addEventListener("click", async () => {
+      try { await K1D.push.enable(); K1D.toast("알림을 켰습니다"); } catch (e) { K1D.toast(K1D.errMsg(e), "err"); }
+      K1D.renderPushBanner(holder);
+    });
+    const ins = holder.querySelector("#pb-install");
+    if (ins) ins.addEventListener("click", async () => { if (await K1D.install()) K1D.toast("설치되었습니다. 홈 화면의 K1 Daily 아이콘으로 여세요"); });
+  };
+  document.addEventListener("k1d-installable", () => { const h = document.getElementById("push-banner"); if (h) K1D.renderPushBanner(h); });
 
   // ---- 서비스워커 등록 (알림 액션 후 화면 새로고침 메시지 수신) ----
   K1D.registerSW = async function () {
