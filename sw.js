@@ -72,3 +72,19 @@ self.addEventListener("notificationclick", event => {
     return self.clients.openWindow(target);
   }));
 });
+
+// 브라우저가 푸시 구독을 만료·교체하면 새 구독으로 다시 등록 (로그인 없이 옛 구독 주소로 소유 확인)
+function b64ToU8(base64) {
+  const pad = "=".repeat((4 - base64.length % 4) % 4);
+  const raw = atob((base64 + pad).replace(/-/g, "+").replace(/_/g, "/"));
+  return Uint8Array.from(raw, c => c.charCodeAt(0));
+}
+self.addEventListener("pushsubscriptionchange", event => {
+  const oldEp = event.oldSubscription && event.oldSubscription.endpoint;
+  event.waitUntil((async () => {
+    const sub = event.newSubscription ||
+      await self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(CFG.vapidPublicKey) });
+    const j = sub.toJSON();
+    if (oldEp) await callRpc("hc_replace_push", { p_old: oldEp, p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth });
+  })().catch(() => null));
+});
