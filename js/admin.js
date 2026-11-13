@@ -101,7 +101,7 @@
       <label class="lbl">구분</label><select class="input" id="b-kind">
         ${[["notice", "공지"], ["promo", "홍보"], ["ad", "광고"]].map(([k, l]) => `<option value="${k}" ${k === v.kind ? "selected" : ""}>${l}</option>`).join("")}</select>
       <label class="lbl">문구</label><textarea class="input" id="b-body" maxlength="200">${K1D.esc(v.body)}</textarea>
-      <label class="lbl">링크 주소 (선택)</label><input class="input" id="b-url" value="${K1D.esc(v.link_url || "")}" placeholder="https://">
+      <label class="lbl">링크 주소 (선택)</label><input class="input" id="b-url" value="${K1D.esc(v.link_url || "")}" placeholder="https:// 또는 mailto:메일주소">
       <label class="lbl">링크 글자 (선택)</label><input class="input" id="b-label" value="${K1D.esc(v.link_label || "")}" placeholder="자세히">
       <label class="lbl">가중치 (1~100, 클수록 자주 노출)</label><input type="number" min="1" max="100" class="input" id="b-weight" value="${v.weight}">
       <label class="lbl">노출 기간 (비우면 상시)</label>
@@ -111,7 +111,7 @@
         <button class="btn" data-close>취소</button><button class="btn primary" id="b-save">저장</button></div>`, (md, close) => {
       md.querySelector("#b-save").addEventListener("click", async () => {
         const url = md.querySelector("#b-url").value.trim();
-        if (url && !/^https?:\/\//i.test(url)) return K1D.toast("링크는 http:// 또는 https:// 로 시작해야 합니다", "err");
+        if (url && !/^(https?:\/\/|mailto:)/i.test(url)) return K1D.toast("링크는 https:// 또는 mailto: 로 시작해야 합니다", "err");
         const rec = { kind: md.querySelector("#b-kind").value, body: md.querySelector("#b-body").value.trim(), link_url: url || null,
           link_label: md.querySelector("#b-label").value.trim() || null, weight: Math.min(100, Math.max(1, Number(md.querySelector("#b-weight").value) || 1)),
           active: md.querySelector("#b-active").checked, valid_from: md.querySelector("#b-from").value || null,
