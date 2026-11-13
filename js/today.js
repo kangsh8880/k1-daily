@@ -111,7 +111,7 @@
     const prev = r.status;
     r.status = status; r.done_at = status === "pending" ? null : new Date().toISOString(); r.via = "web";
     render();
-    try { await K1D.rpc("hc_set_status", { p_occ: r.id, p_status: status }); K1D.renderFeedback($("#feedback")); }
+    try { await K1D.rpc("hc_set_status", { p_occ: r.id, p_status: status }); K1D.ruti.pendingCheer = status === "done"; K1D.renderFeedback($("#feedback")); }
     catch (e) { r.status = prev; render(); K1D.toast(K1D.errMsg(e), "err"); }
   }
 

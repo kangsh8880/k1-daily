@@ -174,10 +174,73 @@
     try {
       const rows = await K1D.rpc("hc_feedback");
       if (!rows || !rows.length) { holder.innerHTML = ""; return; }
-      holder.innerHTML = `<div class="card feedback">${rows.map(r =>
-        `<div class="fb-rule">${K1D.esc(r.rule_name)}</div><div class="fb-msg">${K1D.esc(r.message)}</div>`).join("")}</div>`;
+      const mood = K1D.ruti.moodOf(rows[0].rule_code);
+      holder.innerHTML = `<div class="card feedback has-ruti">${K1D.ruti.html(mood, "ruti-sm")}<div class="fb-body">${rows.map(r =>
+        `<div class="fb-rule">${K1D.esc(r.rule_name)}</div><div class="fb-msg">${K1D.esc(r.message)}</div>`).join("")}</div></div>`;
+      K1D.ruti.bind(holder);
+      if (K1D.ruti.pendingCheer) { K1D.ruti.pendingCheer = false; K1D.ruti.hop(holder.querySelector(".ruti")); }
     } catch (e) { holder.innerHTML = ""; }
   };
+
+  // ---- 마스코트 루티 (SVG + CSS 애니메이션, 동작 줄이기 설정 시 정지) ----
+  K1D.ruti = (function () {
+    const L = "#2F4A6B", B = "#CFE4F7", CH = "#F8C9CF";
+    const MOOD = { START: "wave", PERFECT_TODAY: "perfect", STREAK: "streak", RECOVERY: "thumb",
+      DROP: "sleepy", MISS_ITEM: "miss", PERIOD_DONE: "medal", DEFAULT: "idle" };
+    const EYES = {
+      normal: `<g class="r-eyes"><ellipse cx="82" cy="86" rx="6" ry="8" fill="${L}"/><ellipse cx="118" cy="86" rx="6" ry="8" fill="${L}"/><circle cx="84" cy="83" r="2" fill="#fff"/><circle cx="120" cy="83" r="2" fill="#fff"/></g>`,
+      happy: `<path d="M74,90 q8,-10 16,0 M110,90 q8,-10 16,0" stroke="${L}" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+      wink: `<ellipse cx="82" cy="86" rx="6" ry="8" fill="${L}"/><path d="M110,88 q8,-8 16,0" stroke="${L}" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+      sleepy: `<path d="M74,88 h16 M110,88 h16" stroke="${L}" stroke-width="5" stroke-linecap="round"/>`
+    };
+    const MOUTH = {
+      check: `<path class="r-mouth" d="M88,108 l8,9 l17,-18" stroke="${L}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      flat: `<path class="r-mouth" d="M92,112 h16" stroke="${L}" stroke-width="4.5" stroke-linecap="round"/>`
+    };
+    const arm = (side) => {
+      const x1 = side === "L" ? 50 : 150, x2 = side === "L" ? 28 : 172;
+      return `<g class="r-arm r-arm${side}"><path d="M${x1},100 L${x2},118" stroke="${L}" stroke-width="5" stroke-linecap="round"/><circle cx="${x2}" cy="118" r="7" fill="${B}" stroke="${L}" stroke-width="3.5"/></g>`;
+    };
+    const EXTRA = {
+      perfect: `<path class="r-fx r-star" d="M160,22 l4,9 l10,1 l-8,6 l3,10 l-9,-6 l-9,6 l3,-10 l-8,-6 l10,-1 z" fill="#F6D98B" stroke="#C9A646" stroke-width="2"/>`,
+      streak: `<path class="r-fx r-flame" d="M100,4 c-14,14 -12,26 0,30 c12,-4 14,-16 0,-30 z" fill="#F9C9A0" stroke="#D08A55" stroke-width="2.5"/>`,
+      thumb: `<path class="r-fx r-thumb" d="M178,92 v-12" stroke="${L}" stroke-width="5" stroke-linecap="round"/>`,
+      sleepy: `<text class="r-fx r-zzz" x="150" y="40" font-size="20" font-weight="800" fill="#8AA4BF">z</text>`,
+      miss: `<g class="r-fx r-card"><rect x="64" y="120" width="72" height="34" rx="6" fill="#fff" stroke="${L}" stroke-width="2.5"/><path d="M74,137 h10 M92,132 h36 M92,142 h24" stroke="#8AA4BF" stroke-width="3" stroke-linecap="round"/></g>`,
+      medal: `<g class="r-fx r-medal"><path d="M82,117 l18,16 l18,-16" stroke="#7FB2DE" stroke-width="5" fill="none"/><circle cx="100" cy="145" r="13" fill="#F6D98B" stroke="#C9A646" stroke-width="2.5"/><text x="100" y="150" text-anchor="middle" font-size="13" font-weight="800" fill="#8A6A10">1</text></g>`
+    };
+    const FACE = { wave: ["wink", "check"], perfect: ["happy", "check"], streak: ["happy", "check"], thumb: ["normal", "check"],
+      sleepy: ["sleepy", "flat"], miss: ["normal", "flat"], medal: ["happy", "check"], idle: ["normal", "check"] };
+
+    function html(mood, size) {
+      mood = FACE[mood] ? mood : "idle";
+      const [e, m] = FACE[mood];
+      return `<div class="ruti ${size || ""} m-${mood}" role="img" aria-label="마스코트 루티" title="루티">
+        <svg viewBox="0 0 200 175" xmlns="http://www.w3.org/2000/svg"><g class="r-all">
+          <ellipse cx="78" cy="164" rx="13" ry="8" fill="${B}" stroke="${L}" stroke-width="3.5"/><ellipse cx="122" cy="164" rx="13" ry="8" fill="${B}" stroke="${L}" stroke-width="3.5"/>
+          <g class="r-up">${arm("L")}${arm("R")}
+          <circle cx="100" cy="98" r="60" fill="${B}" stroke="${L}" stroke-width="4"/>
+          <ellipse cx="66" cy="108" rx="9" ry="6" fill="${CH}"/><ellipse cx="134" cy="108" rx="9" ry="6" fill="${CH}"/>
+          ${EYES[e]}${MOUTH[m]}</g>${EXTRA[mood] || ""}</g></svg></div>`;
+    }
+    function hop(el) {
+      if (!el) return;
+      el.classList.remove("hop"); void el.offsetWidth; el.classList.add("hop");
+      setTimeout(() => el.classList.remove("hop"), 900);
+    }
+    function bind(root) {
+      (root || document).querySelectorAll(".ruti").forEach(el => {
+        if (el.dataset.bound) return; el.dataset.bound = "1";
+        el.addEventListener("click", () => hop(el));
+      });
+    }
+    function mount() {
+      document.querySelectorAll("[data-ruti]").forEach(h => { h.innerHTML = html(h.dataset.ruti, h.dataset.size || "ruti-lg"); });
+      bind(document);
+    }
+    document.addEventListener("DOMContentLoaded", mount);
+    return { html, hop, bind, mount, moodOf: c => MOOD[c] || "idle", pendingCheer: false };
+  })();
 
   // ---- 알림 상태 배너: 꺼져 있으면 바로 켜기 + 원인별 안내 (알림 기본 '켜짐' 유지) ----
   K1D.renderPushBanner = async function (holder) {
