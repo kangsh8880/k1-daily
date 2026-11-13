@@ -1,6 +1,6 @@
 {
-  "name": "K1 Daily - 나만의 체크리스트",
-  "short_name": "K1 Daily",
+  "name": "루틴원 (Routine One) - 하루 루틴 체크리스트",
+  "short_name": "루틴원",
   "description": "시간대별 체크리스트, 알림에서 바로 완료, 준수율 피드백",
   "start_url": "./today.html",
   "scope": "./",

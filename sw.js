@@ -1,4 +1,4 @@
-/* K1 Daily Service Worker — 웹푸시 수신 / 알림 버튼([완료]·[30분 후]) 처리 / 최신 코드 우선 */
+/* 루틴원 Service Worker — 웹푸시 수신 / 알림 버튼([완료]·[30분 후]) 처리 / 최신 코드 우선 */
 importScripts("js/config.js");
 const CFG = self.K1D_CONFIG;
 
@@ -17,12 +17,12 @@ self.addEventListener("fetch", event => {
 
 self.addEventListener("push", event => {
   let d = {};
-  try { d = event.data.json(); } catch (e) { d = { title: "K1 Daily", body: event.data ? event.data.text() : "" }; }
+  try { d = event.data.json(); } catch (e) { d = { title: "루틴원", body: event.data ? event.data.text() : "" }; }
   const tokens = d.tokens || [];
   const actions = tokens.length
     ? [{ action: "done", title: tokens.length > 1 ? `모두 완료 (${tokens.length})` : "완료" }, { action: "snooze", title: "30분 후" }]
     : [];
-  event.waitUntil(self.registration.showNotification(d.title || "K1 Daily", {
+  event.waitUntil(self.registration.showNotification(d.title || "루틴원", {
     body: d.body || "",
     tag: d.tag || "k1d",
     renotify: true,

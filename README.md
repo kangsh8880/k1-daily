@@ -1,4 +1,4 @@
-# K1 Daily — 개인 시간대별 체크리스트 실행력 서비스 (MVP v0.1.0)
+# 루틴원 — 개인 시간대별 체크리스트 실행력 서비스 (v0.2.2)
 
 개인이 직접 항목·시간을 정하고, 정해진 시간에 웹 푸시 알림을 받아 **알림에서 바로 [완료]** 를 누르는 서비스.
 중앙에는 사람이 없고, **룰 기반으로 준수율과 응원 메시지**를 보여 준다. 피드백 화면 하단에 공지·홍보·광고 영역 1개.
@@ -28,6 +28,9 @@ sw.js                    서비스워커 (푸시 수신, [완료]/[30분 후] �
 sql/001_schema.sql       테이블·함수·RLS·권한
 sql/002_seed.sql         룰·응원 메시지·배너·추천 세트·관리자
 sql/003_cron.template.sql 매분 알림 예약 작업 (비밀값은 별도 파일)
+sql/007_v020.sql         v0.2.0: 동의·탈퇴·하루 마감 요약 푸시·상태 점검(hc_health)
+.github/workflows/health-check.yml  15분마다 상태 점검, 이상 시 GitHub 실패 메일
+privacy.html             개인정보 처리방침
 supabase/functions/k1-daily-push/index.ts  푸시 발송 Edge Function
 ```
 
