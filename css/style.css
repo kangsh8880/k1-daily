@@ -319,3 +319,52 @@ table.tbl td:not(:first-child), table.tbl th:not(:first-child) { white-space: no
 .policy .card p { margin: 4px 0; }
 .push-off { background: var(--p-red-soft); border-color: #E3B5B5; }
 .push-warn { background: var(--p-yellow-soft); font-size: var(--fs-sm); }
+
+/* ---- 마스코트 루티 ---- */
+.ruti { display: inline-block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ruti svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.ruti-sm { width: 60px; height: 53px; flex: 0 0 60px; }
+.ruti-lg { width: 120px; height: 105px; margin: 6px auto 0; display: block; }
+.feedback.has-ruti { display: flex; gap: 12px; align-items: center; }
+.feedback .fb-body { flex: 1; min-width: 0; }
+.ruti .r-all, .ruti .r-up, .ruti .r-arm, .ruti .r-eyes, .ruti .r-fx { transform-box: view-box; }
+.ruti .r-armL { transform-origin: 50px 100px; }
+.ruti .r-armR { transform-origin: 150px 100px; }
+.ruti .r-up   { transform-origin: 100px 160px; animation: ruti-breathe 3.2s ease-in-out infinite; }
+.ruti .r-eyes { transform-origin: 100px 86px; animation: ruti-blink 4.5s infinite; }
+.ruti .r-all  { transform-origin: 100px 170px; animation: ruti-pop .5s ease-out both; }
+/* 자세 */
+.ruti.m-wave .r-armR   { transform: rotate(-85deg); animation: ruti-wave 1s ease-in-out 3; }
+.ruti.m-perfect .r-armL, .ruti.m-medal .r-armL { transform: rotate(85deg); }
+.ruti.m-perfect .r-armR, .ruti.m-medal .r-armR { transform: rotate(-85deg); }
+.ruti.m-perfect .r-all, .ruti.m-medal .r-all { animation: ruti-pop .5s ease-out both, ruti-jump 1.2s ease-in-out .5s 3; }
+.ruti.m-thumb .r-armR  { transform: rotate(-40deg); }
+.ruti.m-thumb .r-thumb { transform-origin: 178px 92px; animation: ruti-nod 1s ease-in-out 3; }
+.ruti.m-thumb .r-all   { animation: ruti-pop .5s ease-out both, ruti-bob 1s ease-in-out .5s 3; }
+.ruti.m-miss .r-armL   { transform: rotate(-25deg); }
+.ruti.m-miss .r-armR   { transform: rotate(25deg); }
+.ruti.m-miss .r-card   { transform-origin: 100px 137px; animation: ruti-wiggle 1.4s ease-in-out .4s 3; }
+.ruti.m-sleepy .r-up   { animation: ruti-sway 4s ease-in-out infinite; }
+.ruti.m-sleepy .r-zzz  { animation: ruti-zzz 2.6s ease-in-out infinite; }
+.ruti.m-streak .r-flame { transform-origin: 100px 34px; animation: ruti-flame .9s ease-in-out infinite alternate; }
+.ruti.m-perfect .r-star { transform-origin: 160px 34px; animation: ruti-spin 2.4s linear infinite; }
+.ruti.m-medal .r-medal  { transform-origin: 100px 117px; animation: ruti-swing 1.6s ease-in-out 3; }
+/* 탭·완료 시 깡충 */
+.ruti.hop .r-all { animation: ruti-hop .8s cubic-bezier(.3,1.6,.5,1) both; }
+.ruti.hop .r-armL { transform: rotate(85deg); transition: transform .15s; }
+.ruti.hop .r-armR { transform: rotate(-85deg); transition: transform .15s; }
+@keyframes ruti-pop    { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ruti-breathe{ 0%,100% { transform: scale(1,1); } 50% { transform: scale(1.02,.975); } }
+@keyframes ruti-blink  { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@keyframes ruti-wave   { 0%,100% { transform: rotate(-85deg); } 50% { transform: rotate(-120deg); } }
+@keyframes ruti-jump   { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-14px); } 60% { transform: translateY(-14px); } }
+@keyframes ruti-bob    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes ruti-nod    { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-12deg); } }
+@keyframes ruti-wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+@keyframes ruti-sway   { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes ruti-zzz    { 0% { transform: translate(0,0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(10px,-18px); opacity: 0; } }
+@keyframes ruti-flame  { from { transform: scale(1,1); } to { transform: scale(.9,1.15); } }
+@keyframes ruti-spin   { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+@keyframes ruti-swing  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
+@keyframes ruti-hop    { 0% { transform: translateY(0) scale(1); } 20% { transform: translateY(2px) scale(1.05,.92); } 55% { transform: translateY(-22px) scale(.97,1.04); } 100% { transform: translateY(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .ruti * { animation: none !important; transition: none !important; } }
