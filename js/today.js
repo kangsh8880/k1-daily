@@ -1,4 +1,4 @@
-/* K1 Daily - 오늘 체크 */
+/* 루틴원 - 오늘 체크 */
 (function () {
   "use strict";
   const K1D = window.K1D;

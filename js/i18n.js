@@ -1,4 +1,4 @@
-/* K1 Daily - 다국어 구조 (1단계: 한국어만. 언어 추가 시 DICT 에 사전만 추가)
+/* 루틴원 - 다국어 구조 (1단계: 한국어만. 언어 추가 시 DICT 에 사전만 추가)
    - HTML: data-i18n="키" (본문 텍스트), data-i18n-ph="키" (placeholder)
    - JS:   K1D.t("키", {변수}) */
 (function () {
@@ -6,7 +6,7 @@
   const DICT = {
     ko: {
       "nav.today": "오늘", "nav.items": "항목", "nav.report": "리포트", "nav.settings": "설정",
-      "app.name": "K1 Daily", "app.tagline": "나만의 시간대별 체크리스트",
+      "app.name": "루틴원", "app.tagline": "하루 루틴을 하나씩, 꾸준하게",
 
       "login.title": "로그인", "login.desc": "이메일로 받은 인증 코드로 로그인합니다. 비밀번호는 필요 없습니다.",
       "login.email": "이메일", "login.send": "인증 코드 받기", "login.code": "메일로 받은 인증 코드",

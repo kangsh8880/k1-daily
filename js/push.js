@@ -1,4 +1,4 @@
-/* K1 Daily - 웹푸시 구독 / 해제 / 테스트 */
+/* 루틴원 - 웹푸시 구독 / 해제 / 테스트 */
 (function () {
   "use strict";
   const CFG = self.K1D_CONFIG;

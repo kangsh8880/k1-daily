@@ -1,4 +1,4 @@
-/* K1 Daily - 공통: Supabase 클라이언트 / 인증 가드 / 내비 / 테마 / 토스트 / 모달 / 포맷 */
+/* 루틴원 - 공통: Supabase 클라이언트 / 인증 가드 / 내비 / 테마 / 토스트 / 모달 / 포맷 */
 (function () {
   "use strict";
   const CFG = self.K1D_CONFIG;
@@ -49,7 +49,7 @@
       back.className = "modal-back";
       back.innerHTML = `<div class="modal" role="dialog" aria-modal="true">
         <h2>개인정보 수집·이용 동의</h2>
-        <p class="help">K1 Daily를 쓰려면 아래 두 가지에 동의가 필요합니다. 자세한 내용은 <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>을 확인하세요.</p>
+        <p class="help">루틴원을 쓰려면 아래 두 가지에 동의가 필요합니다. 자세한 내용은 <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>을 확인하세요.</p>
         <div class="card">
           <label class="row pick"><input type="checkbox" id="cs-1"><div class="grow"><b>[필수] 개인정보 수집·이용</b>
             <div class="help">이메일, 표시 이름, 시간대, 체크 항목과 체크 기록, 알림 기기 정보 · 목적: 체크리스트 알림과 준수율 피드백 · 보관: 탈퇴 시 즉시 삭제</div></div></label>
@@ -204,7 +204,7 @@
       K1D.renderPushBanner(holder);
     });
     const ins = holder.querySelector("#pb-install");
-    if (ins) ins.addEventListener("click", async () => { if (await K1D.install()) K1D.toast("설치되었습니다. 홈 화면의 K1 Daily 아이콘으로 여세요"); });
+    if (ins) ins.addEventListener("click", async () => { if (await K1D.install()) K1D.toast("설치되었습니다. 홈 화면의 루틴원 아이콘으로 여세요"); });
   };
   document.addEventListener("k1d-installable", () => { const h = document.getElementById("push-banner"); if (h) K1D.renderPushBanner(h); });
 

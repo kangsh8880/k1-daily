@@ -1,4 +1,4 @@
-/* K1 Daily - 설정 (내 정보 / 알림 / 테마 / 로그아웃) */
+/* 루틴원 - 설정 (내 정보 / 알림 / 테마 / 로그아웃) */
 (function () {
   "use strict";
   const K1D = window.K1D;
@@ -124,7 +124,7 @@
         if (data.length < 1000) break;
       }
       const tz = K1D.me.tz;
-      download(`K1Daily_체크기록_${stamp()}.csv`, [["날짜", "시간", "항목", "분류", "상태", "완료시각", "체크방법"]]
+      download(`루틴원_체크기록_${stamp()}.csv`, [["날짜", "시간", "항목", "분류", "상태", "완료시각", "체크방법"]]
         .concat(all.map(r => [r.occ_date, K1D.hm(r.slot_time), r.title, r.category, ST[r.status] || r.status,
           r.done_at ? K1D.localTime(r.done_at, tz) : "", r.via === "push" ? "알림" : r.via === "web" ? "앱" : ""])));
       K1D.toast(`${all.length}건을 내려받았습니다`);
@@ -135,7 +135,7 @@
     try {
       const { data, error } = await K1D.sb().from("hc_items").select("*").order("sort");
       if (error) throw error;
-      download(`K1Daily_항목_${stamp()}.csv`, [["항목", "분류", "시간", "요일", "시작일", "종료일", "재알림(분)", "메모", "상태"]]
+      download(`루틴원_항목_${stamp()}.csv`, [["항목", "분류", "시간", "요일", "시작일", "종료일", "재알림(분)", "메모", "상태"]]
         .concat(data.map(i => [i.title, i.category, i.times.map(K1D.hm).join(" "), K1D.daysLabel(i.days), i.start_date || "", i.end_date || "",
           i.remind_min, i.note || "", i.deleted_at ? "삭제됨" : i.active ? "사용" : "일시중지"])));
     } catch (e) { K1D.toast(K1D.errMsg(e), "err"); }
