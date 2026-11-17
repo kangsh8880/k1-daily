@@ -10,7 +10,7 @@ insert into public.hc_admin_emails(email) values ('kangsh8880@gmail.com') on con
 insert into public.hc_rules(code, name, description, priority, params) values
  ('START',         '시작 환영',     '첫날(과거 기록 없음)',                                   5,  '{}'),
  ('PERIOD_DONE',   '기간 완주',     '기간형 항목 종료일(오늘·어제) + 기간 준수율 ≥ min_rate', 10, '{"min_rate":80}'),
- ('PERFECT_TODAY', '완벽한 하루',   '오늘 지난 회차 모두 완료 (지난 회차 ≥ min_due)',        20, '{"min_due":3}'),
+ ('PERFECT_TODAY', '완벽한 하루',   '오늘 지난 회차 모두 완료 (지난 회차 ≥ min_due, 오늘 전체 회차의 min_share% 이상 경과)', 20, '{"min_due":3,"min_share":50}'),
  ('RECOVERY',      '회복',          '어제 < prev_below, 오늘 ≥ now_above',                     30, '{"prev_below":50,"now_above":80,"min_due":3}'),
  ('STREAK',        '연속 달성',     '어제까지 준수율 ≥ min_rate 가 min_days 일 이상 연속',     40, '{"min_rate":80,"min_days":3}'),
  ('DROP',          '하락 경고',     '최근 3일(어제까지) 평균 준수율 < below',                  50, '{"below":60}'),
@@ -26,7 +26,7 @@ begin
     ('START', '{이름}님, 시작을 환영합니다. 오늘은 체크 버튼을 누르는 습관 하나만 만들어 봐요.'),
     ('START', '첫날입니다. 완벽하지 않아도 괜찮아요. 알림이 오면 바로 체크하는 것부터 시작해요.'),
     ('PERIOD_DONE', '{항목} 기간을 완주했습니다. 끝까지 해낸 {이름}님, 정말 대단합니다.'),
-    ('PERIOD_DONE', '{항목} 완주를 축하합니다. 이제 결과 확인 검사 일정을 챙겨 주세요.'),
+    ('PERIOD_DONE', '{항목} 기간을 완주했습니다. 다음 목표도 같은 방법으로 이어 가 보세요.'),
     ('PERFECT_TODAY', '{이름}님, 오늘 지금까지 100% 달성! 이 흐름 그대로 가요.'),
     ('PERFECT_TODAY', '빈틈없는 하루입니다. 오늘의 나에게 박수 한 번.'),
     ('RECOVERY', '다시 돌아오셨네요. 넘어졌다 일어나는 게 진짜 실력입니다. 오늘 {준수율}%.'),
